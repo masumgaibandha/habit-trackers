@@ -57,6 +57,30 @@ async function run() {
       })
     })
 
+    // My habits
+    app.get("/my-habits", async (req, res) => {
+  try {
+    const email = req.query.email;
+
+    if (!email) {
+      return res.status(400).send({ message: "Email query is required" });
+    }
+
+    const result = await habitsCollection
+      .find({ userEmail: email })
+      .sort({ createdAt: -1 })
+      .toArray();
+
+    res.send(result);
+  } catch (error) {
+    console.error(error);
+    res.status(500).send({ message: "Failed to load user habits" });
+  }
+});
+
+
+
+
     app.get("/public-habits", async (req, res) => {
       const result = await habitsCollection
         .find({ isPublic: true })
