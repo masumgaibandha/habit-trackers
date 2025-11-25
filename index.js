@@ -24,7 +24,7 @@ async function run() {
     await client.connect();
     const db = client.db("habits-db");
     const habitsCollection = db.collection("habits");
-    const usersCollection = db.collection("users");
+    // const usersCollection = db.collection("users");
 
     app.post("/habits", async (req, res) => {
       try {
@@ -36,7 +36,9 @@ async function run() {
         res.send(result);
       } catch (error) {
         console.error(error);
-        res.status(500).send({ success: false, message: "Failed to add habit" });
+        res
+          .status(500)
+          .send({ success: false, message: "Failed to add habit" });
       }
     });
 
@@ -50,21 +52,27 @@ async function run() {
         res.send(result);
       } catch (error) {
         console.error(error);
-        res.status(500).send({ success: false, message: "Failed to load habits" });
+        res
+          .status(500)
+          .send({ success: false, message: "Failed to load habits" });
       }
     });
 
     app.get("/habits/:id", async (req, res) => {
       try {
         const { id } = req.params;
-        const result = await habitsCollection.findOne({ _id: new ObjectId(id) });
+        const result = await habitsCollection.findOne({
+          _id: new ObjectId(id),
+        });
         res.send({
           success: true,
           result,
         });
       } catch (error) {
         console.error(error);
-        res.status(500).send({ success: false, message: "Failed to load habit" });
+        res
+          .status(500)
+          .send({ success: false, message: "Failed to load habit" });
       }
     });
 
@@ -149,8 +157,7 @@ async function run() {
         if (dates.length > 0) {
           currentStreak = 1;
           for (let i = dates.length - 2; i >= 0; i--) {
-            const diff =
-              (dates[i + 1] - dates[i]) / (1000 * 60 * 60 * 24);
+            const diff = (dates[i + 1] - dates[i]) / (1000 * 60 * 60 * 24);
             if (diff === 1) {
               currentStreak++;
             } else {
@@ -161,8 +168,7 @@ async function run() {
           bestStreak = 1;
           let tempStreak = 1;
           for (let i = 0; i < dates.length - 1; i++) {
-            const diff =
-              (dates[i + 1] - dates[i]) / (1000 * 60 * 60 * 24);
+            const diff = (dates[i + 1] - dates[i]) / (1000 * 60 * 60 * 24);
             if (diff === 1) {
               tempStreak++;
             } else {
@@ -217,8 +223,11 @@ async function run() {
     });
 
     await client.db("admin").command({ ping: 1 });
-    console.log("Pinged your deployment. You successfully connected to MongoDB!");
-  } finally {}
+    console.log(
+      "Pinged your deployment. You successfully connected to MongoDB!"
+    );
+  } finally {
+  }
 }
 
 run().catch(console.dir);
