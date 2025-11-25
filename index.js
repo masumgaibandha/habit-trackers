@@ -122,15 +122,13 @@ async function run() {
     app.patch("/habits/:id/complete", async (req, res) => {
       try {
         const { id } = req.params;
-        const today = new Date().toISOString().slice(0, 10); 
+        const today = new Date().toISOString().slice(0, 10); // "YYYY-MM-DD"
 
-        
         const result = await habitsCollection.updateOne(
           { _id: new ObjectId(id) },
           { $addToSet: { completionHistory: today } }
         );
 
-        
         if (result.modifiedCount === 0) {
           return res.send({
             success: false,
